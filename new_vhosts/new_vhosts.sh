@@ -43,19 +43,15 @@ EOF
 
 echo Setting correct permissions...
 
-# Changing SELinux context o docroot folder,log and index.html files to allow httpd process access
+# Changing SELinux context o docroot and log folders to allow httpd process access
 
-semanage fcontext -a -t httpd_sys_content_t "/var/vhosts/$domain_name/"
-semanage fcontext -a -t httpd_sys_content_t "/var/vhosts/$domain_name/index.html"
-semanage fcontext -a -t httpd_log_t /var/vhosts/$domain_name/logs/error.log
-semanage fcontext -a -t httpd_log_t /var/vhosts/$domain_name/logs/access.log
+semanage fcontext -a -t httpd_sys_content_t "/var/vhosts/$domain_name(/.*)?"
+
+semanage fcontext -a -t httpd_log_t "/var/vhosts/$domain_name/logs(/.*)?"
 
 # Applying SELinux context changes
 
 restorecon -R /var/vhosts/$domain_name/
-restorecon -R /var/vhosts/$domain_name/index.html
-restorecon -R /var/vhosts/$domain_name/logs/error.log
-restorecon -R /var/vhosts/$domain_name/logs/access.log
 
 #adjusting hosts file (when resolving name locally)
 
